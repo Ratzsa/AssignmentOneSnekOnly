@@ -1,10 +1,10 @@
 # Yrkesakademin Trollhättan
 # Software Developer Electrical & Autonomous Vehicles
 
-# SV23TR E. Programmering och utveckling av inbyggda system
-# YH00260-2020-3
+## SV23TR E. Programmering och utveckling av inbyggda system
+## YH00260-2020-3
 
-# Assignment 1: Etch-a-sketch & Snake
+## Assignment 1: Etch-a-sketch & Snake
 
 Using emulation: https://wokwi.com/projects/296234816685212169
 Step 1 (G): Rewrite the code to C code. (Completed 2023-06-05)
