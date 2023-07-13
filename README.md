@@ -33,3 +33,9 @@ For the game I will need millis.c and millis.h.
 Have been struggling with getting anything to work for a month but will now get back to it and take it step by step.
 First I will try to get it to set a random LED on physical hardware for 2 seconds, clear that, and set another. This will be done
 using millis.
+
+## 2023-07-13
+Finally figured out that you can NOT write *x++; to change the value of the variable in x.
+Now movement works. Have implemented millis, and moved around some code to use functions and properly use game.c.
+Next step is to use the structs for the snake. After that adding apples and get the snake to grow when eating apples. Finally I will add
+game over statuses for hitting yourself and hitting walls.
