@@ -3,28 +3,21 @@
 #include "uart.h"
 #include "max72xx.h"
 #include "analogRead.h"
+#include <avr/io.h>
+#include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdbool.h>
 #include <time.h>
 #include <stdlib.h>
 #include "game.h"
+#include "millis.h"
+#include "config.h"
 
-#define BIT_SET(a, b) ((a) |= (1ULL << (b)))
-#define BIT_CLEAR(a,b) ((a) &= ~(1ULL<<(b)))
-#define BIT_FLIP(a,b) ((a) ^= (1ULL<<(b)))
-#define BIT_CHECK(a,b) (!!((a) & (1ULL<<(b)))) 
-
-#define MAX_COLUMNS 16
-#define MAX_ROWS 8
-#define ANALOG_HIGH 768
-#define ANALOG_LOW 256
-
-#define JOYSTICK_BUTTON 2
-#define JOYSTICK_VERTICAL 0
-#define JOYSTICK_HORIZONTAL 1
-
+void setMarker(const uint8_t x, const uint8_t y);
+void clearMarker(const uint8_t x, const uint8_t y);
 void clearScreen();
-void setMarker(uint8_t x, uint8_t y);
+void startScreen();
+
 
 int main()
 {
@@ -34,85 +27,46 @@ int main()
     BIT_CLEAR(DDRC, JOYSTICK_VERTICAL);
     BIT_CLEAR(DDRC, JOYSTICK_HORIZONTAL);
 
-    // Set up serial and display
+    // Set up unused pin
+    BIT_CLEAR(DDRC, UNUSED_PIN);
+    BIT_CLEAR(PIND, UNUSED_PIN);
+    
+    // Set up serial, display and millis
     init_serial();
 	max7219_init();
+    millis_init();
+    sei();
+    
 
     // Clear screen in preparation for game
     clearScreen();
-    _delay_ms(50);
+    _delay_ms(75);
 
-    bool gameIsRunning = false;
-    srand(time(NULL));
-
+    // Display startScreen, then clear screen and use the timing when joystick is pressed to seed random
+    startScreen();
+    clearScreen();
+    srand(millis_get());
+    
     while(1)
-    {
-        uint8_t x = 0;
-        uint8_t y = 0;
-        setUpGame(&x, &y);
-        setMarker(x, y);
-        _delay_ms(2000);
-    }
+    {        
+        snakeGame();
+    }    
 
     return 0;
 }
 
-
-/*
-int main()
+// Tänder en specificerad LED
+void setMarker(const uint8_t x, const uint8_t y)
 {
-    BIT_CLEAR(DDRD, JOYSTICK_BUTTON);
-    BIT_SET(PIND, JOYSTICK_BUTTON);
-    BIT_CLEAR(DDRC, JOYSTICK_VERTICAL);
-	BIT_CLEAR(DDRC, JOYSTICK_HORIZONTAL);
-    
-    uint8_t x = 15;
-    uint8_t y = 0;
-
-	init_serial();
-	max7219_init();
-
-    clearScreen();
-    _delay_ms(50);
-    // Set start LED
-    setMarker(x, y);
-    _delay_ms(500);
-
-	while (1)
-    {
-        int16_t horizontalMove = analogRead(JOYSTICK_HORIZONTAL);
-        int16_t verticalMove = analogRead(JOYSTICK_VERTICAL);
-
-        if(!BIT_CHECK(PIND, JOYSTICK_BUTTON))
-        {
-            clearScreen();
-        }
-        
-        setMarker(x, y);
-
-        if(horizontalMove < ANALOG_LOW && x != 15)
-        {
-            x++;
-        }
-
-        if(horizontalMove > ANALOG_HIGH && x != 0)
-        {
-            x--;
-        }
-
-        if(verticalMove < ANALOG_LOW && y != 7)
-        {
-            y++;
-        }
-
-        if(verticalMove > ANALOG_HIGH && y != 0)
-        {
-            y--;
-        }
-	}
-	return 0;
+    max7219b_set(x, y);
+    max7219b_out();
 }
-*/
+
+void clearMarker(const uint8_t x, const uint8_t y)
+{
+    max7219b_clr(x, y);
+    max7219b_out();
+}
 
 void clearScreen()
 {
@@ -126,9 +80,62 @@ void clearScreen()
     }
 }
 
-void setMarker(uint8_t x, uint8_t y)
+void startScreen()
 {
-    max7219b_set(x, y);
-    max7219b_out();
-    _delay_ms(100);
+    bool onStartScreen = true;
+    clearScreen(); // Rensar skärmen
+    _delay_ms(50); // Delay behövs för att hårdvaran ska hinna med
+    setMarker(0,2);
+    setMarker(0,3);
+    setMarker(0,4);
+    setMarker(1,1);
+    setMarker(1,5);
+    setMarker(2,1);
+    setMarker(2,3);
+    setMarker(2,5);
+    setMarker(3,3);
+    setMarker(3,4);
+    setMarker(4,2);
+    setMarker(4,3);
+    setMarker(4,4);
+    setMarker(4,5);
+    setMarker(5,1);
+    setMarker(5,4);
+    setMarker(6,1);
+    setMarker(6,4);
+    setMarker(7,2);
+    setMarker(7,3);
+    setMarker(7,4);
+    setMarker(7,5);
+    setMarker(8,1);
+    setMarker(8,2);
+    setMarker(8,3);
+    setMarker(8,4);
+    setMarker(8,5);
+    setMarker(9,2);
+    setMarker(10,3);
+    setMarker(11,2);
+    setMarker(12,1);
+    setMarker(12,2);
+    setMarker(12,3);
+    setMarker(12,4);
+    setMarker(12,5);
+    setMarker(13,1);
+    setMarker(13,2);
+    setMarker(13,3);
+    setMarker(13,4);
+    setMarker(13,5);    
+    setMarker(14,1);
+    setMarker(14,3);
+    setMarker(14,5);
+    setMarker(15,1);
+    setMarker(15,5);
+    
+    while(onStartScreen)
+    {
+        if(!BIT_CHECK(PIND, JOYSTICK_BUTTON))
+        {
+            onStartScreen = false;
+        }
+    }
 }

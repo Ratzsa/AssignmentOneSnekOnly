@@ -11,7 +11,7 @@ LDFLAGS=-mmcu=$(MCU)
 PORT=\\\\.\\COM7
 BIN=sketchworm
 OUT=${BIN}.hex
-SOURCES = main.c max72xx.c uart.c analogRead.c game.c
+SOURCES = main.c max72xx.c uart.c analogRead.c game.c millis.c
 MAKETEST =mingw32-make -f MakefileTest
 
 DEBUG?=1

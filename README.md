@@ -28,3 +28,8 @@ After some thought that idea is now scrappyed and I will instead only use the 8x
 ## 2023-06-11
 Using the main.c file from Step 1 as a base for working controls.
 For the game I will need millis.c and millis.h.
+
+## 2023-07-03
+Have been struggling with getting anything to work for a month but will now get back to it and take it step by step.
+First I will try to get it to set a random LED on physical hardware for 2 seconds, clear that, and set another. This will be done
+using millis.

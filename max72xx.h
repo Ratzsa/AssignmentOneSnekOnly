@@ -2,6 +2,7 @@
 #define __MAX72xx_H
 
 #include <avr/io.h>
+#include "config.h"
 
 #define MAX7219_CS      PB2 // CS,  pin 4 on the MAX7219 Board
 #define MAX7219_DIN     PB3 // DIN, pin 3 on the MAX7219 Board
@@ -14,7 +15,7 @@
 #define MAX7219_DIN_HI()    PORTB |= (1 << MAX7219_DIN)
 #define MAX7219_DIN_LO()    PORTB &= ~(1 << MAX7219_DIN)
 
-#define MAX7219_SEG_NUM 2 // The number of the segments.
+#define MAX7219_SEG_NUM NUMBER_OF_SEGMENTS // The number of the segments.
 #define MAX7219_BUFFER_SIZE MAX7219_SEG_NUM * 8 // The size of the buffer
 
 

@@ -3,3 +3,6 @@
 /MKWithTests
 /sketchworm.hex
 /sketchworm.map
+REALmain.c
+.vscode/settings.json
+.gitignore
