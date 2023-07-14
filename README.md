@@ -24,6 +24,9 @@ For Step 1, Etch-a-sketch, refer to https://github.com/Ratzsa/AssignmentOneSnake
 My first plan was to have a 2-dimensional array with the size 10x18, which is 2 fields more in both directions than the LEDs we are using
 in the project, with the border "virtual" LEDs being considered "on" at all times. The reason for this was to handle collisions easily.
 After some thought that idea is now scrappyed and I will instead only use the 8x16 LEDs available.
+# Update 2023-07-14
+I have used a config.h file for this project to make it look slightly more readable by moving out a lot of code there, as well as allowing
+the user to set up the play area for themself. It also contains the struct definitions used.
 
 ## 2023-06-11
 Using the main.c file from Step 1 as a base for working controls.
