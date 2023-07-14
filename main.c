@@ -42,7 +42,7 @@ int main()
     clearScreen();
     _delay_ms(75);
 
-    // Display startScreen, then clear screen and use the timing when joystick is pressed to seed random
+    // Display startScreen, then clear the screen and use the timing when joystick is pressed to seed random
     startScreen();
     clearScreen();
     srand(millis_get());
@@ -50,18 +50,20 @@ int main()
     while(1)
     {        
         snakeGame();
+        endScreen();
     }    
 
     return 0;
 }
 
-// Tänder en specificerad LED
+// Sets a specific LED
 void setMarker(const uint8_t x, const uint8_t y)
 {
     max7219b_set(x, y);
     max7219b_out();
 }
 
+// Clears a specific LED
 void clearMarker(const uint8_t x, const uint8_t y)
 {
     max7219b_clr(x, y);
@@ -83,8 +85,8 @@ void clearScreen()
 void startScreen()
 {
     bool onStartScreen = true;
-    clearScreen(); // Rensar skärmen
-    _delay_ms(50); // Delay behövs för att hårdvaran ska hinna med
+    clearScreen();
+    _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
     setMarker(0,2);
     setMarker(0,3);
     setMarker(0,4);
@@ -136,6 +138,58 @@ void startScreen()
         if(!BIT_CHECK(PIND, JOYSTICK_BUTTON))
         {
             onStartScreen = false;
+        }
+    }
+}
+
+void endScreen()
+{
+    bool onEndScreen = true;
+    clearScreen();
+    _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
+    setMarker(1,1);
+    setMarker(1,2);
+    setMarker(1,3);
+    setMarker(1,4);
+    setMarker(1,5);
+    setMarker(2,1);
+    setMarker(2,3);
+    setMarker(2,5);
+    setMarker(3,1);
+    setMarker(3,3);
+    setMarker(3,5);
+    setMarker(3,5);
+    setMarker(5,1);
+    setMarker(5,2);
+    setMarker(5,3);
+    setMarker(5,4);
+    setMarker(5,5);
+    setMarker(6,2);
+    setMarker(7,3);
+    setMarker(8,4);
+    setMarker(9,1);
+    setMarker(9,2);
+    setMarker(9,3);
+    setMarker(9,4);
+    setMarker(9,5);
+    setMarker(11,1);
+    setMarker(11,2);
+    setMarker(11,3);
+    setMarker(11,4);
+    setMarker(11,5);
+    setMarker(12,1);
+    setMarker(12,5);
+    setMarker(13,1);
+    setMarker(13,5);
+    setMarker(14,2);
+    setMarker(14,3);
+    setMarker(14,4);
+
+    while(onEndScreen)
+    {
+        if(!BIT_CHECK(PIND, JOYSTICK_BUTTON))
+        {
+            onEndScreen = false;
         }
     }
 }

@@ -13,17 +13,24 @@ void snakeGame()
     bool gameIsRunning;
 
     volatile millis_t timeAtLastMove;
-    uint8_t x = 0;
-    uint8_t y = 0;
+    volatile millis_t timeAtNewPart;
+    // uint8_t x = 0;
+    // uint8_t y = 0;
     uint8_t move;
     timeAtLastMove = millis_get();
+    timeAtNewPart = millis_get();
+
+    clearScreen();    
 
     while(inGame)
     {
         // GAME SETUP
-        setUpGame(&x, &y);
-        setMarker(x, y);
-        if(x < 7)
+        SnakeBody snakeHead;
+        Snake inGameSnake;
+        inGameSnake.snakeLength = 1;
+        setUpGame(&snakeHead.snakeX, &snakeHead.snakeY);
+        setMarker(snakeHead.snakeX, snakeHead.snakeY);
+        if(snakeHead.snakeX > 8)
         {
             move = MOVE_LEFT;
         }
@@ -33,6 +40,8 @@ void snakeGame()
         }
         uint8_t previousMove = HORIZONTAL_AXIS;
         uint16_t timeBetweenMoves = 1250;
+        inGameSnake.bodyPart[0] = snakeHead;
+        Food apple;
         // END OF GAME SETUP
 
         gameIsRunning = true;
@@ -40,14 +49,36 @@ void snakeGame()
 
         while(gameIsRunning)
         {
+            // END GAME status checks
+            if(snakeHead.snakeX == -1 || snakeHead.snakeY == -1 || snakeHead.snakeX == MAX_COLUMNS || snakeHead.snakeY == MAX_ROWS)
+            {
+                gameIsRunning = false;
+                inGame = false;
+            }
+
+            for(uint8_t i = 1; i < inGameSnake.snakeLength; i++)
+            {
+                if((snakeHead.snakeX == inGameSnake.bodyPart[i].snakeX && snakeHead.snakeY == inGameSnake.bodyPart[i].snakeY) && inGameSnake.snakeLength > 1)
+                {
+                    gameIsRunning = false;
+                    inGame = false;
+                }
+            }
+            // End of END GAME status checks
+
             move = setMovement(move, previousMove);
 
             if(millis_get() - timeAtLastMove > timeBetweenMoves)
             {
-                makeMove(move, &x, &y, &previousMove);
+                makeMove(move, &snakeHead.snakeX, &snakeHead.snakeY, &previousMove);
+                showMove(&inGameSnake, &snakeHead);
                 timeAtLastMove = millis_get();
-                clearScreen();
-                setMarker(x, y);
+            }
+
+            if(millis_get() - timeAtNewPart > 7500)
+            {
+                inGameSnake.snakeLength++;
+                timeAtNewPart = millis_get();
             }
         }
     }
@@ -115,4 +146,16 @@ uint8_t setMovement(uint8_t move, uint8_t previousMove)
     }
 
     return move;        
+}
+
+void showMove(Snake *fullSnake, SnakeBody *snakeCurrentHead)
+{
+    for(uint8_t i = fullSnake->snakeLength; i > 0; i--)
+    {
+        fullSnake->bodyPart[i] = fullSnake->bodyPart[i-1];
+    }
+
+    fullSnake->bodyPart[0] = *snakeCurrentHead;
+    clearMarker(fullSnake->bodyPart[fullSnake->snakeLength].snakeX, fullSnake->bodyPart[fullSnake->snakeLength].snakeY);
+    setMarker(snakeCurrentHead->snakeX, snakeCurrentHead->snakeY);
 }

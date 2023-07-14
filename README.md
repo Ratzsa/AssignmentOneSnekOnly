@@ -39,3 +39,11 @@ Finally figured out that you can NOT write *x++; to change the value of the vari
 Now movement works. Have implemented millis, and moved around some code to use functions and properly use game.c.
 Next step is to use the structs for the snake. After that adding apples and get the snake to grow when eating apples. Finally I will add
 game over statuses for hitting yourself and hitting walls.
+Structs have been put in and seem to be working.
+
+## 2023-07-14
+Will start off by ending the game if the snake hits a wall. Changed coordinates of the snake from uint8_t to int8_t to be able to get negative values.
+The snake will die at either x or y being -1 or 16/8 respectively, or however large the playing field is.
+Implementing death by self collision was relatively simple. Just had to make sure the snake had more than one body part, or it would collide with itself automatically.
+Left TODO: Implementing food and make the snake grow when eating. Have tried getting the snake to grow every 7.5 seconds, and that seems to work perfectly fine.
+Food should not be a massive problem, but might be a good amount of code to write.

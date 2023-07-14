@@ -3,8 +3,8 @@
 
 typedef struct
 {
-    uint8_t snakeX;
-    uint8_t snakeY;
+    int8_t snakeX;
+    int8_t snakeY;
 } SnakeBody;
 
 typedef struct
@@ -12,6 +12,12 @@ typedef struct
     uint8_t snakeLength;
     SnakeBody bodyPart[128];    
 } Snake;
+
+typedef struct
+{
+    uint8_t foodX;
+    uint8_t foodY;
+} Food;
 
 // SET number of LED matrix displays in use. Wokwi simulation uses 2.
 // This is used in max72xx.h
