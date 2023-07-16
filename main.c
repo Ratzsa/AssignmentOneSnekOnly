@@ -46,11 +46,22 @@ int main()
     startScreen();
     clearScreen();
     srand(millis_get());
+
+    uint8_t endStatus = 0;
     
     while(1)
-    {        
-        snakeGame();
-        endScreen();
+    {
+        snakeGame(&endStatus);
+        if(endStatus == 1)
+        {
+            winScreen();
+        }
+        else
+        {
+            endScreen();
+        }
+
+        endStatus = 0;
     }    
 
     return 0;
@@ -190,6 +201,52 @@ void endScreen()
         if(!BIT_CHECK(PIND, JOYSTICK_BUTTON))
         {
             onEndScreen = false;
+        }
+    }
+}
+
+void winScreen()
+{
+    bool onWinScreen = true;
+    clearScreen();
+    _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
+    setMarker(1,1);
+    setMarker(1,2);
+    setMarker(1,3);
+    setMarker(1,4);
+    setMarker(2,5);
+    setMarker(3,2);
+    setMarker(3,3);
+    setMarker(3,4);
+    setMarker(4,5);
+    setMarker(5,1);
+    setMarker(5,2);
+    setMarker(5,3);
+    setMarker(5,4);
+    setMarker(7,1);
+    setMarker(7,2);
+    setMarker(7,3);
+    setMarker(7,4);
+    setMarker(7,5);
+    setMarker(9,1);
+    setMarker(9,2);
+    setMarker(9,3);
+    setMarker(9,4);
+    setMarker(9,5);
+    setMarker(10,2);
+    setMarker(11,3);
+    setMarker(12,4);
+    setMarker(13,1);
+    setMarker(13,2);
+    setMarker(13,3);
+    setMarker(13,4);
+    setMarker(13,5);
+
+    while(onWinScreen)
+    {
+        if(!BIT_CHECK(PIND, JOYSTICK_BUTTON))
+        {
+            onWinScreen = false;
         }
     }
 }

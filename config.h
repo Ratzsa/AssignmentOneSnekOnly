@@ -9,7 +9,7 @@ typedef struct
 
 typedef struct
 {
-    uint8_t snakeLength;
+    uint16_t snakeLength;
     SnakeBody bodyPart[128];    
 } Snake;
 

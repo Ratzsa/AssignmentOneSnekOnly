@@ -50,3 +50,9 @@ The snake will die at either x or y being -1 or 16/8 respectively, or however la
 Implementing death by self collision was relatively simple. Just had to make sure the snake had more than one body part, or it would collide with itself automatically.
 Left TODO: Implementing food and make the snake grow when eating. Have tried getting the snake to grow every 7.5 seconds, and that seems to work perfectly fine.
 Food should not be a massive problem, but might be a good amount of code to write.
+Successfully (?) implemented a win state, which no human will ever achieve but it's there now.
+The game now has food. The snake grows when it eats food. One little bug remains. Sometimes the game does not turn on the LED for the food. Not sure how to fix that.
+
+## 2023-07-16
+The bug that made the food LED sometimes not work seems to be fixed. It was probably a bit of an overload due to how the function was written.
+Have fixed the function, and everything seems to be working as it should. Changed the snake length variable from uint8_t to uint16_t because with only uint8_t you are limited to a playing field of 128 LEDs. Will do some testing to see if the win condition works or if there are any other bugs.
