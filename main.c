@@ -13,44 +13,25 @@
 #include "millis.h"
 #include "config.h"
 
+void initSnake();
 void setMarker(const uint8_t x, const uint8_t y);
 void clearMarker(const uint8_t x, const uint8_t y);
 void clearScreen();
 void startScreen();
-
+void buttonClick();
 
 int main()
 {
-    // Set up joystick
-    BIT_CLEAR(DDRD, JOYSTICK_BUTTON);
-    BIT_SET(PIND, JOYSTICK_BUTTON);
-    BIT_CLEAR(DDRC, JOYSTICK_VERTICAL);
-    BIT_CLEAR(DDRC, JOYSTICK_HORIZONTAL);
-
-    // Set up unused pin
-    BIT_CLEAR(DDRC, UNUSED_PIN);
-    BIT_CLEAR(PIND, UNUSED_PIN);
-    
-    // Set up serial, display and millis
-    init_serial();
-	max7219_init();
-    millis_init();
-    sei();
-    
-
-    // Clear screen in preparation for game
-    clearScreen();
-    _delay_ms(75);
-
-    // Display startScreen, then clear the screen and use the timing when joystick is pressed to seed random
-    startScreen();
-    clearScreen();
+    // Initialization
+    initSnake();
+    // Get timing of joystick button input for random seed
     srand(millis_get());
 
     uint8_t endStatus = 0;
-    
+
     while(1)
     {
+        endStatus = 0;
         snakeGame(&endStatus);
         if(endStatus == 1)
         {
@@ -60,11 +41,32 @@ int main()
         {
             endScreen();
         }
-
-        endStatus = 0;
-    }    
+    }
 
     return 0;
+}
+
+void initSnake()
+{
+    // Set up joystick
+    BIT_CLEAR(DDRD, JOYSTICK_BUTTON);
+    BIT_SET(PIND, JOYSTICK_BUTTON);
+    BIT_CLEAR(DDRC, JOYSTICK_VERTICAL);
+    BIT_CLEAR(DDRC, JOYSTICK_HORIZONTAL);
+
+    // Set up serial, display and millis
+    init_serial();
+	max7219_init();
+    millis_init();
+    sei();
+
+    // Clear screen in preparation for game
+    clearScreen();
+    _delay_ms(75);
+
+    // Display startScreen, then clear the screen
+    startScreen();
+    clearScreen();
 }
 
 // Sets a specific LED
@@ -95,7 +97,6 @@ void clearScreen()
 
 void startScreen()
 {
-    bool onStartScreen = true;
     clearScreen();
     _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
     setMarker(0,2);
@@ -137,25 +138,18 @@ void startScreen()
     setMarker(13,2);
     setMarker(13,3);
     setMarker(13,4);
-    setMarker(13,5);    
+    setMarker(13,5);
     setMarker(14,1);
     setMarker(14,3);
     setMarker(14,5);
     setMarker(15,1);
     setMarker(15,5);
-    
-    while(onStartScreen)
-    {
-        if(!BIT_CHECK(PIND, JOYSTICK_BUTTON))
-        {
-            onStartScreen = false;
-        }
-    }
+
+    buttonClick();
 }
 
 void endScreen()
 {
-    bool onEndScreen = true;
     clearScreen();
     _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
     setMarker(1,1);
@@ -196,18 +190,11 @@ void endScreen()
     setMarker(14,3);
     setMarker(14,4);
 
-    while(onEndScreen)
-    {
-        if(!BIT_CHECK(PIND, JOYSTICK_BUTTON))
-        {
-            onEndScreen = false;
-        }
-    }
+    buttonClick();
 }
 
 void winScreen()
 {
-    bool onWinScreen = true;
     clearScreen();
     _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
     setMarker(1,1);
@@ -242,11 +229,13 @@ void winScreen()
     setMarker(13,4);
     setMarker(13,5);
 
-    while(onWinScreen)
+    buttonClick();
+}
+
+void buttonClick()
+{
+    while(BIT_CHECK(PIND, JOYSTICK_BUTTON))
     {
-        if(!BIT_CHECK(PIND, JOYSTICK_BUTTON))
-        {
-            onWinScreen = false;
-        }
+        // Hi, this is at the bottom of the file!
     }
 }

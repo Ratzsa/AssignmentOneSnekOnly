@@ -1,0 +1,35 @@
+TESTPROG = check.exe
+CFLAGS = -Wall -Werror -g
+SOURCES = main.c game.c
+DEPS = game.h config.h
+CC = gcc
+GTEST = gtest
+LIBGTEST = C:\msys64\mingw64\lib\libgtest_main.a C:\msys64\mingw64\lib\libgtest.a
+OUTPUTDIR = bin/test
+
+OBJS = $(addprefix $(OUTPUTDIR)/,$(SOURCES:.c=.o))
+
+runtest: $(TESTPROG)
+	./$(TESTPROG) --gtest_color=yes
+
+$(PROG): $(OUTPUTDIR) $(OBJS)
+	$(CC) $(CFLAGS) -o $(PROG) $(OBJS)
+
+$(OUTPUTDIR)/%.o: %.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OUTPUTDIR)/%.o: %.cpp $(DEPS)
+	g++ -o $@ -c $< -I $(GTEST)
+
+$(OUTPUTDIR):
+	@mkdir "$(OUTPUTDIR)"
+
+$(TESTPROG): $(OUTPUTDIR)/game.o $(OUTPUTDIR)/testsnake.o
+	g++ -o $@ $^ $(CFLAGS) -I $(GTEST) $(LIBGTEST)
+
+clean:
+	@echo Error messages regarding not finding certain files can be safely ignored.
+	@del /q "$(OUTPUTDIR)"
+	@del /q "$(TESTPROG)"
+
+.PHONY: clean runtest

@@ -12,53 +12,50 @@ void snakeGame(uint8_t *endStatus)
 {
     bool inGame = true;
     bool gameIsRunning;
-
+    bool hasMoved = false;
     volatile millis_t timeAtLastMove;
     uint8_t move;
     timeAtLastMove = millis_get();
 
-    clearScreen();    
+    clearScreen();
 
-    while(inGame)
+    // GAME SETUP
+    SnakeBody snakeHead;
+    Snake inGameSnake;
+    inGameSnake.snakeLength = 1;
+
+    setUpGame(&snakeHead.snakeX, &snakeHead.snakeY);
+    setMarker(snakeHead.snakeX, snakeHead.snakeY);
+
+    if(snakeHead.snakeX > (MAX_COLUMNS / 2))
     {
-        // GAME SETUP
-        SnakeBody snakeHead;
-        Snake inGameSnake;
-        inGameSnake.snakeLength = 1;
-        setUpGame(&snakeHead.snakeX, &snakeHead.snakeY);
-        setMarker(snakeHead.snakeX, snakeHead.snakeY);
-        if(snakeHead.snakeX > 8)
-        {
-            move = MOVE_LEFT;
-        }
-        else
-        {
-            move = MOVE_RIGHT;
-        }
-        uint8_t previousMove = HORIZONTAL_AXIS;
-        uint16_t timeBetweenMoves = 750;
-        inGameSnake.bodyPart[0] = snakeHead;
-        Food apple = generateFood(&inGameSnake);
-        setMarker(apple.foodX, apple.foodY);
-        // END OF GAME SETUP
+        move = MOVE_LEFT;
+    }
+    else
+    {
+        move = MOVE_RIGHT;
+    }
 
-        gameIsRunning = true;
-        volatile millis_t timeAtLastMove = 0;
+    uint8_t previousMove = HORIZONTAL_AXIS;
+    uint16_t timeBetweenMoves = TIME_BETWEEN_MOVES;
+    inGameSnake.bodyPart[0] = snakeHead;
 
-        while(gameIsRunning)
+    // Setting up the first piece of food
+    Food apple = generateFood(&inGameSnake);
+    setMarker(apple.foodX, apple.foodY);
+
+    // END OF GAME SETUP
+
+    gameIsRunning = true;
+    // volatile millis_t timeAtLastMove = 0;
+
+    while(gameIsRunning)
+    {
+        // Only checking end game status if snake has moved
+        if(hasMoved)
         {
-            // WIN GAME status check
-            if(inGameSnake.snakeLength == (MAX_COLUMNS * MAX_ROWS) - 1)
-            {
-                *endStatus = 1;
-                gameIsRunning = false;
-                inGame = false;
-                break;
-            }
-            // End of WIN GAME status check
-
-            // END GAME status checks
-            if(snakeHead.snakeX == -1 || snakeHead.snakeY == -1 || snakeHead.snakeX == MAX_COLUMNS || snakeHead.snakeY == MAX_ROWS)
+            // LOSE GAME status checks
+            if(snakeHead.snakeX < 0 || snakeHead.snakeY < 0 || snakeHead.snakeX >= MAX_COLUMNS || snakeHead.snakeY >= MAX_ROWS)
             {
                 gameIsRunning = false;
                 inGame = false;
@@ -74,43 +71,54 @@ void snakeGame(uint8_t *endStatus)
                     break;
                 }
             }
-            // End of END GAME status checks
+            // End of LOSE GAME status checks
 
-            move = setMovement(move, previousMove);
-
-            if(millis_get() - timeAtLastMove > timeBetweenMoves)
+            // WIN GAME status check
+            if(inGameSnake.snakeLength == MAX_SNAKE_LENGTH)
             {
-                makeMove(move, &snakeHead.snakeX, &snakeHead.snakeY, &previousMove);
-                showMove(&inGameSnake, &snakeHead);
-                timeAtLastMove = millis_get();
+                *endStatus = 1;
+                gameIsRunning = false;
+                inGame = false;
+                break;
             }
+            // End of WIN GAME status check
+            hasMoved = false;
+        }
 
-            if((snakeHead.snakeX == apple.foodX) && (snakeHead.snakeY == apple.foodY))
+
+        move = setMovement(move, previousMove);
+
+        if(millis_get() - timeAtLastMove > timeBetweenMoves)
+        {
+            makeMove(move, &snakeHead.snakeX, &snakeHead.snakeY, &previousMove);
+            showMove(&inGameSnake, &snakeHead);
+            timeAtLastMove = millis_get();
+            hasMoved = true;
+        }
+
+        if((snakeHead.snakeX == apple.foodX) && (snakeHead.snakeY == apple.foodY))
+        {
+            inGameSnake.snakeLength += 1;
+            apple = generateFood(&inGameSnake);
+            _delay_ms(50);
+            setMarker(apple.foodX, apple.foodY);
+
+            // Adding a difficulty curve, reducing time between moves after every 5 pieces of food
+            if(inGameSnake.snakeLength % 5 == 0)
             {
-                inGameSnake.snakeLength += 1;
-                apple = generateFood(&inGameSnake);
-                _delay_ms(50);
-                setMarker(apple.foodX, apple.foodY);
-
-                // Adding a difficulty curve, reducing time between moves after every 5 pieces of food
-                // On second thought, reducing the time between moves with 100 milliseconds might be a bit too much
-                // because that would results in 0 time eventually before the game is done.
-                if(inGameSnake.snakeLength % 5 == 0)
-                {
-                    timeBetweenMoves -= 15;
-                }
+                timeBetweenMoves -= TIME_BETWEEN_MOVES_REDUCTION;
             }
         }
     }
 }
 
-void setUpGame(uint8_t *x, uint8_t *y)
+void setUpGame(int8_t *x, int8_t *y)
 {
     *x = rand() % MAX_COLUMNS;
     *y = rand() % MAX_ROWS;
 }
 
-void makeMove(const uint8_t move, uint8_t *x, uint8_t *y, uint8_t *previousMove)
+void makeMove(const uint8_t move, int8_t *x, int8_t *y, uint8_t *previousMove)
 {
     switch(move)
     {
@@ -165,14 +173,14 @@ uint8_t setMovement(uint8_t move, uint8_t previousMove)
         move = MOVE_UP;
     }
 
-    return move;        
+    return move;
 }
 
 void showMove(Snake *fullSnake, SnakeBody *snakeCurrentHead)
 {
     for(uint8_t i = fullSnake->snakeLength; i > 0; i--)
     {
-        fullSnake->bodyPart[i] = fullSnake->bodyPart[i-1];
+        fullSnake->bodyPart[i] = fullSnake->bodyPart[i - 1];
     }
 
     fullSnake->bodyPart[0] = *snakeCurrentHead;
@@ -198,7 +206,7 @@ Food generateFood(const Snake *fullSnake)
         }
 
         if(checkCollideCounter == 0)
-        {         
+        {
             noCollide = true;
         }
     }
