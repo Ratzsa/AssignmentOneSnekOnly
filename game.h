@@ -5,8 +5,8 @@
 
 typedef struct
 {
-    int8_t snakeX;
-    int8_t snakeY;
+    uint8_t snakeX;
+    uint8_t snakeY;
 } SnakeBody;
 
 typedef struct

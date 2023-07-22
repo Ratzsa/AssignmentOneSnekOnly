@@ -55,7 +55,7 @@ void snakeGame(uint8_t *endStatus)
         if(hasMoved)
         {
             // LOSE GAME status checks
-            if(snakeHead.snakeX < 0 || snakeHead.snakeY < 0 || snakeHead.snakeX >= MAX_COLUMNS || snakeHead.snakeY >= MAX_ROWS)
+            if(snakeHead.snakeX >= MAX_COLUMNS || snakeHead.snakeY >= MAX_ROWS)
             {
                 gameIsRunning = false;
                 inGame = false;
@@ -82,9 +82,24 @@ void snakeGame(uint8_t *endStatus)
                 break;
             }
             // End of WIN GAME status check
+
+            // Checking for food
+            if((snakeHead.snakeX == apple.foodX) && (snakeHead.snakeY == apple.foodY))
+            {
+                inGameSnake.snakeLength += 1;
+                apple = generateFood(&inGameSnake);
+                setMarker(apple.foodX, apple.foodY);
+
+                // Adding a difficulty curve, reducing time between moves after every 5 pieces of food
+                if(inGameSnake.snakeLength % 5 == 0)
+                {
+                    timeBetweenMoves -= TIME_BETWEEN_MOVES_REDUCTION;
+                }
+            }
+            // End of Checking for food
+
             hasMoved = false;
         }
-
 
         move = setMovement(move, previousMove);
 
@@ -94,20 +109,6 @@ void snakeGame(uint8_t *endStatus)
             showMove(&inGameSnake, &snakeHead);
             timeAtLastMove = millis_get();
             hasMoved = true;
-        }
-
-        if((snakeHead.snakeX == apple.foodX) && (snakeHead.snakeY == apple.foodY))
-        {
-            inGameSnake.snakeLength += 1;
-            apple = generateFood(&inGameSnake);
-            _delay_ms(50);
-            setMarker(apple.foodX, apple.foodY);
-
-            // Adding a difficulty curve, reducing time between moves after every 5 pieces of food
-            if(inGameSnake.snakeLength % 5 == 0)
-            {
-                timeBetweenMoves -= TIME_BETWEEN_MOVES_REDUCTION;
-            }
         }
     }
 }
@@ -152,25 +153,32 @@ uint8_t setMovement(uint8_t move, uint8_t previousMove)
     int16_t horizontalMove = analogRead(JOYSTICK_HORIZONTAL);
     int16_t verticalMove = analogRead(JOYSTICK_VERTICAL);
 
-    // Set movement
-    if(horizontalMove < ANALOG_LOW && previousMove == VERTICAL_AXIS)
+    switch(previousMove)
     {
-        move = MOVE_RIGHT;
-    }
+        case VERTICAL_AXIS:
+            if(horizontalMove < ANALOG_LOW)
+            {
+                move = MOVE_RIGHT;
+            }
+            else if(horizontalMove > ANALOG_HIGH)
+            {
+                move = MOVE_LEFT;
+            }
+            break;
 
-    if(horizontalMove > ANALOG_HIGH && previousMove == VERTICAL_AXIS)
-    {
-        move = MOVE_LEFT;
-    }
+        case HORIZONTAL_AXIS:
+            if(verticalMove < ANALOG_LOW)
+            {
+                move = MOVE_DOWN;
+            }
+            else if(verticalMove > ANALOG_HIGH)
+            {
+                move = MOVE_UP;
+            }
+            break;
 
-    if(verticalMove < ANALOG_LOW && previousMove == HORIZONTAL_AXIS)
-    {
-        move = MOVE_DOWN;
-    }
-
-    if(verticalMove > ANALOG_HIGH && previousMove == HORIZONTAL_AXIS)
-    {
-        move = MOVE_UP;
+        default:
+            break;
     }
 
     return move;

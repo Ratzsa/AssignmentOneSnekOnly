@@ -73,3 +73,12 @@ Finished the sort of crappy readme file. Probably not helpful.
 Removed some old comments and extra empty lines. But also added extra empty lines to make it more pleasing to look at for myself.
 Removed the while loops from the start/end/win screen functions and replaced with a buttonClick function. For some reason this gave me a few weird glitches, possibly related to eachother. It seems that sometimes the snake is moving vertically at the start of the game instead of horizontally. Not sure why, but it doesn't seem to happen often. Will ignore it for now and hope it goes away.
 Added a bool in the snakeGame function so that instead of checking the game logic every cycle, it now only checks if the snake has moved. Should make for a much more pleasant gaming experience now when the Arduino is not running on 100% constantly.
+Changed setMovement in game.c to a switch instead of a bunch of if statements. Looks way better and was easy to do as previousMove can only have 2 values. No need to test a bunch of if statements if a simple switch is enough. Should have improved performance slightly.
+Wanted to use uint8_t instead of int8_t in the SnakeBody struct, but when I do the snake can move to negative squares and that's just not very good.
+\* This seems to be fixed after changing
+# if(snakeHead.snakeX < 0 || snakeHead.snakeY < 0 || snakeHead.snakeX == MAX_COLUMNS || snakeHead.snakeY == MAX_ROWS)
+to
+# if(snakeHead.snakeX < 0 || snakeHead.snakeY < 0 || snakeHead.snakeX >= MAX_COLUMNS || snakeHead.snakeY >= MAX_ROWS)
+It should also be fixed if I remove
+# snakeHead.snakeX < 0 || snakeHead.snakeY < 0
+from the if statement. Will do more testing but should be fine now.
