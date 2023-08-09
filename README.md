@@ -43,3 +43,4 @@ This depends on how the display or displays are connected and placed. For a sing
 #define VERTICAL_AXIS 1
 
 These can be complicated to get right, as neither the joystick module nor the display are plugged into a breadboard the same way as shown in the Wokwi project. It might be adjustable with these lines, but it is probably easier to just change the makeMove() function in game.c
+Personally I changed *(y)-- to *(y)++ and *(y)++ to *(y)--.

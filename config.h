@@ -35,4 +35,8 @@
 #define HORIZONTAL_AXIS 0
 #define VERTICAL_AXIS 1
 
+// X and Y values for drawing GAME/WIN/END screens
+#define DRAW_X 16
+#define DRAW_Y 8
+
 #endif

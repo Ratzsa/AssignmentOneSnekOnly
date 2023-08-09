@@ -18,6 +18,7 @@ void setMarker(const uint8_t x, const uint8_t y);
 void clearMarker(const uint8_t x, const uint8_t y);
 void clearScreen();
 void startScreen();
+// void setArray(uint8_t **textArray[DRAW_X][DRAW_Y]);
 void buttonClick();
 
 int main()
@@ -97,140 +98,130 @@ void clearScreen()
 
 void startScreen()
 {
+    uint8_t startTxt[DRAW_X][DRAW_Y] = {{0, 0, 1, 1, 1, 0, 0, 0},
+                                        {0, 1, 0, 0, 0, 1, 0, 0},
+                                        {0, 1, 0, 1, 0, 1, 0, 0},
+                                        {0, 0, 0, 1, 1, 0, 0, 0},
+                                        {0, 0, 1, 1, 1, 1, 0, 0},
+                                        {0, 1, 0, 0, 1, 0, 0, 0},
+                                        {0, 1, 0, 0, 1, 0, 0, 0},
+                                        {0, 0, 1, 1, 1, 1, 0, 0},
+                                        {0, 1, 1, 1, 1, 1, 0, 0},
+                                        {0, 0, 1, 0, 0, 0, 0, 0},
+                                        {0, 0, 0, 1, 0, 0, 0, 0},
+                                        {0, 0, 1, 0, 0, 0, 0, 0},
+                                        {0, 1, 1, 1, 1, 1, 0, 0},
+                                        {0, 1, 1, 1, 1, 1, 0, 0},
+                                        {0, 1, 0, 1, 0, 1, 0, 0},
+                                        {0, 1, 0, 0, 0, 1, 0, 0}};
     clearScreen();
     _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
-    setMarker(0,2);
-    setMarker(0,3);
-    setMarker(0,4);
-    setMarker(1,1);
-    setMarker(1,5);
-    setMarker(2,1);
-    setMarker(2,3);
-    setMarker(2,5);
-    setMarker(3,3);
-    setMarker(3,4);
-    setMarker(4,2);
-    setMarker(4,3);
-    setMarker(4,4);
-    setMarker(4,5);
-    setMarker(5,1);
-    setMarker(5,4);
-    setMarker(6,1);
-    setMarker(6,4);
-    setMarker(7,2);
-    setMarker(7,3);
-    setMarker(7,4);
-    setMarker(7,5);
-    setMarker(8,1);
-    setMarker(8,2);
-    setMarker(8,3);
-    setMarker(8,4);
-    setMarker(8,5);
-    setMarker(9,2);
-    setMarker(10,3);
-    setMarker(11,2);
-    setMarker(12,1);
-    setMarker(12,2);
-    setMarker(12,3);
-    setMarker(12,4);
-    setMarker(12,5);
-    setMarker(13,1);
-    setMarker(13,2);
-    setMarker(13,3);
-    setMarker(13,4);
-    setMarker(13,5);
-    setMarker(14,1);
-    setMarker(14,3);
-    setMarker(14,5);
-    setMarker(15,1);
-    setMarker(15,5);
+
+    for(uint8_t x = 0; x < DRAW_X; x++)
+    {
+        for(uint8_t y = 0; y < DRAW_Y; y++)
+        {
+            if(startTxt[x][y] == 1)
+            {
+                setMarker(x, y);
+            }
+        }
+    }
+
+    // setArray(&startText);
 
     buttonClick();
 }
 
 void endScreen()
 {
+    uint8_t endText[DRAW_X][DRAW_Y] =  {{0, 0, 0, 0, 0, 0, 0, 0},
+                                        {0, 1, 1, 1, 1, 1, 0, 0},
+                                        {0, 1, 0, 1, 0, 1, 0, 0},
+                                        {0, 1, 0, 1, 0, 1, 0, 0},
+                                        {0, 0, 0, 0, 0, 0, 0, 0},
+                                        {0, 1, 1, 1, 1, 1, 0, 0},
+                                        {0, 0, 1, 0, 0, 0, 0, 0},
+                                        {0, 0, 0, 1, 0, 0, 0, 0},
+                                        {0, 0, 0, 0, 1, 0, 0, 0},
+                                        {0, 1, 1, 1, 1, 1, 0, 0},
+                                        {0, 0, 0, 0, 0, 0, 0, 0},
+                                        {0, 1, 1, 1, 1, 1, 0, 0},
+                                        {0, 1, 0, 0, 0, 1, 0, 0},
+                                        {0, 1, 0, 0, 0, 1, 0, 0},
+                                        {0, 0, 1, 1, 1, 0, 0, 0},
+                                        {0, 0, 0, 0, 0, 0, 0, 0}};
     clearScreen();
     _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
-    setMarker(1,1);
-    setMarker(1,2);
-    setMarker(1,3);
-    setMarker(1,4);
-    setMarker(1,5);
-    setMarker(2,1);
-    setMarker(2,3);
-    setMarker(2,5);
-    setMarker(3,1);
-    setMarker(3,3);
-    setMarker(3,5);
-    setMarker(3,5);
-    setMarker(5,1);
-    setMarker(5,2);
-    setMarker(5,3);
-    setMarker(5,4);
-    setMarker(5,5);
-    setMarker(6,2);
-    setMarker(7,3);
-    setMarker(8,4);
-    setMarker(9,1);
-    setMarker(9,2);
-    setMarker(9,3);
-    setMarker(9,4);
-    setMarker(9,5);
-    setMarker(11,1);
-    setMarker(11,2);
-    setMarker(11,3);
-    setMarker(11,4);
-    setMarker(11,5);
-    setMarker(12,1);
-    setMarker(12,5);
-    setMarker(13,1);
-    setMarker(13,5);
-    setMarker(14,2);
-    setMarker(14,3);
-    setMarker(14,4);
+
+    for(uint8_t x = 0; x < DRAW_X; x++)
+    {
+        for(uint8_t y = 0; y < DRAW_Y; y++)
+        {
+            if(endText[x][y] == 1)
+            {
+                setMarker(x, y);
+            }
+        }
+    }
+
+    // setArray(&endText);
 
     buttonClick();
 }
 
 void winScreen()
 {
+    uint8_t winText[DRAW_X][DRAW_Y] =  {{0, 0, 0, 0, 0, 0, 0, 0},
+                                        {0, 1, 1, 1, 1, 0, 0, 0},
+                                        {0, 0, 0, 0, 0, 1, 0, 0},
+                                        {0, 0, 1, 1, 1, 0, 0, 0},
+                                        {0, 0, 0, 0, 0, 1, 0, 0},
+                                        {0, 1, 1, 1, 1, 0, 0, 0},
+                                        {0, 0, 0, 0, 0, 0, 0, 0},
+                                        {0, 1, 1, 1, 1, 1, 0, 0},
+                                        {0, 0, 0, 0, 0, 0, 0, 0},
+                                        {0, 1, 1, 1, 1, 1, 0, 0},
+                                        {0, 0, 1, 0, 0, 0, 0, 0},
+                                        {0, 0, 0, 1, 0, 0, 0, 0},
+                                        {0, 0, 0, 0, 1, 0, 0, 0},
+                                        {0, 1, 1, 1, 1, 1, 0, 0},
+                                        {0, 0, 0, 0, 0, 0, 0, 0},
+                                        {0, 1, 1, 1, 0, 1, 0, 0}};
     clearScreen();
     _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
-    setMarker(1,1);
-    setMarker(1,2);
-    setMarker(1,3);
-    setMarker(1,4);
-    setMarker(2,5);
-    setMarker(3,2);
-    setMarker(3,3);
-    setMarker(3,4);
-    setMarker(4,5);
-    setMarker(5,1);
-    setMarker(5,2);
-    setMarker(5,3);
-    setMarker(5,4);
-    setMarker(7,1);
-    setMarker(7,2);
-    setMarker(7,3);
-    setMarker(7,4);
-    setMarker(7,5);
-    setMarker(9,1);
-    setMarker(9,2);
-    setMarker(9,3);
-    setMarker(9,4);
-    setMarker(9,5);
-    setMarker(10,2);
-    setMarker(11,3);
-    setMarker(12,4);
-    setMarker(13,1);
-    setMarker(13,2);
-    setMarker(13,3);
-    setMarker(13,4);
-    setMarker(13,5);
+
+    for(uint8_t x = 0; x < DRAW_X; x++)
+    {
+        for(uint8_t y = 0; y < DRAW_Y; y++)
+        {
+            if(winText[x][y] == 1)
+            {
+                setMarker(x, y);
+            }
+        }
+    }
+
+    // setArray(&winText);
 
     buttonClick();
 }
+
+/*
+void setArray(uint8_t **textArray[DRAW_X][DRAW_Y])
+{
+    for(uint8_t x = 0; x < DRAW_X; x++)
+    {
+        for(uint8_t y = 0; y < DRAW_Y; y++)
+        {
+            if(textArray[x][y] == 1)
+            {
+                setMarker(x, y);
+            }
+        }
+    }
+}
+*/
 
 void buttonClick()
 {

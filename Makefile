@@ -9,7 +9,7 @@ CFLAGS=-Wall -Wextra  -Wundef -pedantic \
 		-Os -std=gnu99 -DF_CPU=16000000UL -mmcu=${MCU} -DBAUD=19200
 LDFLAGS=-mmcu=$(MCU)
 PORT=\\\\.\\COM7
-BIN=sketchworm
+BIN=snake
 OUT=${BIN}.hex
 SOURCES = main.c max72xx.c uart.c analogRead.c game.c millis.c
 MAKETEST =mingw32-make -f MakefileTest
@@ -24,7 +24,7 @@ endif
 
 OBJS = $(addprefix $(OUTPUTDIR)/,$(SOURCES:.c=.o))
 
-all: $(OUTPUTDIR)  $(OUT) 
+all: $(OUTPUTDIR)  $(OUT)
 
 $(OBJS): Makefile
 
@@ -52,7 +52,7 @@ clean:
 test:
 	$(MAKETEST)
 
-$(OUTPUTDIR): 
+$(OUTPUTDIR):
 	@mkdir "$(OUTPUTDIR)"
-		   	
+
 .PHONY: clean dirs test

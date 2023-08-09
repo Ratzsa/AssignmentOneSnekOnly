@@ -70,36 +70,38 @@ void max7219b_out(void) {
 
 
 
-// void max7219b_out(void) {
-//     uint8_t bit_mask = 0x80;
-//     for (uint8_t row = 1; row <= 8; row++) {
-//         uint8_t buffer_seg = MAX7219_BUFFER_SIZE;
-//         MAX7219_CS_LO();
-//         while (buffer_seg != 0) {
-//             max7219_byte(row);
-//             for (uint8_t index = 8; index != 0; index--) {
-//                 uint8_t col = max7219_buffer[buffer_seg + index - 9];
-//                 MAX7219_CLK_LO();
-//                 if (col & bit_mask)
-//                     MAX7219_DIN_HI();
-//                 else
-//                     MAX7219_DIN_LO();
-//                 MAX7219_CLK_HI();
-//             }
-//             buffer_seg -= 8;
-//         }
-//         MAX7219_CS_HI();
-//         MAX7219_CLK_LO();
-//         bit_mask >>= 1;
-//     }
-// }
+/*
+void max7219b_out(void) {
+     uint8_t bit_mask = 0x80;
+     for (uint8_t row = 1; row <= 8; row++) {
+         uint8_t buffer_seg = MAX7219_BUFFER_SIZE;
+         MAX7219_CS_LO();
+         while (buffer_seg != 0) {
+             max7219_byte(row);
+             for (uint8_t index = 8; index != 0; index--) {
+                 uint8_t col = max7219_buffer[buffer_seg + index - 9];
+                 MAX7219_CLK_LO();
+                 if (col & bit_mask)
+                     MAX7219_DIN_HI();
+                 else
+                     MAX7219_DIN_LO();
+                 MAX7219_CLK_HI();
+             }
+             buffer_seg -= 8;
+         }
+         MAX7219_CS_HI();
+         MAX7219_CLK_LO();
+         bit_mask >>= 1;
+     }
+}
+*/
 
 void max7219b_set(uint8_t x, uint8_t y) {
 
     //x = (MAX7219_BUFFER_SIZE) - x - 9;
     if (x < MAX7219_BUFFER_SIZE) max7219_buffer[x] |= (1 << y);
 }
- 
+
 void max7219b_clr(uint8_t x, uint8_t y) {
     if (x < MAX7219_BUFFER_SIZE) max7219_buffer[x] &= ~(1 << y);
 }

@@ -134,7 +134,7 @@ void makeMove(const uint8_t move, int8_t *x, int8_t *y, uint8_t *previousMove)
             break;
 
         case MOVE_DOWN:
-            (*y) ++;
+            (*y)++;
             *previousMove = VERTICAL_AXIS;
             break;
 
