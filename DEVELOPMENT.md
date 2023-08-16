@@ -82,3 +82,9 @@ to
 It should also be fixed if I remove
 # snakeHead.snakeX < 0 || snakeHead.snakeY < 0
 from the if statement. Will do more testing but should be fine now.
+
+## 2023-08-09
+Made code look nice! Instead of 50 individual lines of code saying "setMarker(x, y);" there is now an array for each "text" displayed on screen, with a small code block to display the correct LEDs. The code block is repeating and there could be a separate function for it, but have not managed to get a pointer to a multidimensional array working yet. At the same time, a pointer means using more memory.
+
+## 2023-08-16
+Function to display the text screens now done. Just need to fix unit testing and everything should be 100% awesome.

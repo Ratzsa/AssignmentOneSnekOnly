@@ -6,3 +6,5 @@
 REALmain.c
 .vscode/settings.json
 .gitignore
+snake.hex
+snake.map

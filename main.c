@@ -18,7 +18,7 @@ void setMarker(const uint8_t x, const uint8_t y);
 void clearMarker(const uint8_t x, const uint8_t y);
 void clearScreen();
 void startScreen();
-// void setArray(uint8_t **textArray[DRAW_X][DRAW_Y]);
+void setArray(uint8_t textArray[DRAW_X][DRAW_Y]);
 void buttonClick();
 
 int main()
@@ -98,37 +98,26 @@ void clearScreen()
 
 void startScreen()
 {
-    uint8_t startTxt[DRAW_X][DRAW_Y] = {{0, 0, 1, 1, 1, 0, 0, 0},
-                                        {0, 1, 0, 0, 0, 1, 0, 0},
-                                        {0, 1, 0, 1, 0, 1, 0, 0},
-                                        {0, 0, 0, 1, 1, 0, 0, 0},
-                                        {0, 0, 1, 1, 1, 1, 0, 0},
-                                        {0, 1, 0, 0, 1, 0, 0, 0},
-                                        {0, 1, 0, 0, 1, 0, 0, 0},
-                                        {0, 0, 1, 1, 1, 1, 0, 0},
-                                        {0, 1, 1, 1, 1, 1, 0, 0},
-                                        {0, 0, 1, 0, 0, 0, 0, 0},
-                                        {0, 0, 0, 1, 0, 0, 0, 0},
-                                        {0, 0, 1, 0, 0, 0, 0, 0},
-                                        {0, 1, 1, 1, 1, 1, 0, 0},
-                                        {0, 1, 1, 1, 1, 1, 0, 0},
-                                        {0, 1, 0, 1, 0, 1, 0, 0},
-                                        {0, 1, 0, 0, 0, 1, 0, 0}};
+    uint8_t startText[DRAW_X][DRAW_Y] = {{0, 0, 1, 1, 1, 0, 0, 0},
+                                         {0, 1, 0, 0, 0, 1, 0, 0},
+                                         {0, 1, 0, 1, 0, 1, 0, 0},
+                                         {0, 0, 0, 1, 1, 0, 0, 0},
+                                         {0, 0, 1, 1, 1, 1, 0, 0},
+                                         {0, 1, 0, 0, 1, 0, 0, 0},
+                                         {0, 1, 0, 0, 1, 0, 0, 0},
+                                         {0, 0, 1, 1, 1, 1, 0, 0},
+                                         {0, 1, 1, 1, 1, 1, 0, 0},
+                                         {0, 0, 1, 0, 0, 0, 0, 0},
+                                         {0, 0, 0, 1, 0, 0, 0, 0},
+                                         {0, 0, 1, 0, 0, 0, 0, 0},
+                                         {0, 1, 1, 1, 1, 1, 0, 0},
+                                         {0, 1, 1, 1, 1, 1, 0, 0},
+                                         {0, 1, 0, 1, 0, 1, 0, 0},
+                                         {0, 1, 0, 0, 0, 1, 0, 0}};
     clearScreen();
     _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
 
-    for(uint8_t x = 0; x < DRAW_X; x++)
-    {
-        for(uint8_t y = 0; y < DRAW_Y; y++)
-        {
-            if(startTxt[x][y] == 1)
-            {
-                setMarker(x, y);
-            }
-        }
-    }
-
-    // setArray(&startText);
+    setArray(startText);
 
     buttonClick();
 }
@@ -154,18 +143,7 @@ void endScreen()
     clearScreen();
     _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
 
-    for(uint8_t x = 0; x < DRAW_X; x++)
-    {
-        for(uint8_t y = 0; y < DRAW_Y; y++)
-        {
-            if(endText[x][y] == 1)
-            {
-                setMarker(x, y);
-            }
-        }
-    }
-
-    // setArray(&endText);
+    setArray(endText);
 
     buttonClick();
 }
@@ -191,24 +169,12 @@ void winScreen()
     clearScreen();
     _delay_ms(50); // Delay to let the hardware catch up, not sure if necessary.
 
-    for(uint8_t x = 0; x < DRAW_X; x++)
-    {
-        for(uint8_t y = 0; y < DRAW_Y; y++)
-        {
-            if(winText[x][y] == 1)
-            {
-                setMarker(x, y);
-            }
-        }
-    }
-
-    // setArray(&winText);
+    setArray(winText);
 
     buttonClick();
 }
 
-/*
-void setArray(uint8_t **textArray[DRAW_X][DRAW_Y])
+void setArray(uint8_t textArray[DRAW_X][DRAW_Y])
 {
     for(uint8_t x = 0; x < DRAW_X; x++)
     {
@@ -221,7 +187,6 @@ void setArray(uint8_t **textArray[DRAW_X][DRAW_Y])
         }
     }
 }
-*/
 
 void buttonClick()
 {
